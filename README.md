@@ -1,7 +1,6 @@
 # gis-raster
 A conceptual C++ GIS Raster class.
 
-```
 # Build
 There is currently a simple test application that can be built with CMake. <br />
 It provides a bare-bones use case. <br />
