@@ -129,10 +129,11 @@ public:
         m_nodatavalue( limits( o.m_nodatavalue ) ),
         m_data()
     {
+        m_data.reserve( o.m_data.size() );
         std::transform(
             o.m_data.begin(), o.m_data.end(),
             std::back_inserter( m_data ),
-            [ clamp ]( U const val ) -> T
+            [ clamp ]( U val ) -> T
             {
                 return limits( val, clamp );
             } );
@@ -154,13 +155,17 @@ public:
         m_scalex = o.m_scalex;
         m_scaley = o.m_scaley;
         m_nodatavalue = limits( o.m_nodatavalue );
+
+        Data tmp;
+        tmp.reserve( o.m_data.size() );
         std::transform(
             o.m_data.begin(), o.m_data.end(),
-            std::back_inserter( m_data ),
-            []( U const val ) -> T
+            std::back_inserter( tmp ),
+            []( U val ) -> T
             {
                 return limits( val );
             } );
+        m_data = std::move( tmp );
         return *this;
     }
 
