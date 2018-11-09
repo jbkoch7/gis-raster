@@ -9,14 +9,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 int main(
     int argc,
-    char** argv)
+    char** argv )
 {
     try
     {
         gis::Raster< float, float, int > raster;
         gis::Band< float >& a = raster.band< 0 >();
         a.scale( 0.0 );
-        a = std::move( gis::Band< float >( 10, 10, 2.0, 7.0 ) );
+        a = gis::Band< float >( 10, 10, 2.0, 7.0 );
         std::cout << std::endl << "rast1:" << std::endl;
         std::cout << a.width() << std::endl;
         std::cout << a( 0, 1 ) << std::endl;
@@ -57,10 +57,10 @@ int main(
         std::cout << rast4.size() << std::endl;
         std::cout << "same size: " << rast4.same_size() << std::endl;
 
-        gis::Raster< int > rast5(
+        gis::Raster< int, int > rast5(
             20, 20,
-            std::make_tuple( 6 ),
-            std::make_tuple( 7 ) );
+            std::make_tuple( 6, 8 ),
+            std::make_tuple( 7, 9 ) );
         std::cout << std::endl << "rast5:" << std::endl;
         std::cout << rast5.band().nodatavalue() << std::endl;
         std::cout << rast5.band()( 0, 10 ) << std::endl;
@@ -68,17 +68,14 @@ int main(
         rast5.band< 0 >()( 0, 0 ) = rast5.band< 0 >().nodatavalue();
         rast5.band< 0 >()( 0, 1 ) = 8;
         rast5.band< 0 >() *= 3.4;
-        //rast5.band< 0 >()( 0, 2 ) = rast5.band< 0 >().nodatavalue();
         std::cout << "count: " << rast5.band< 0 >().count() << std::endl;
         std::cout << "min: " << rast5.band< 0 >().min() << std::endl;
         std::cout << "max: " << rast5.band< 0 >().max() << std::endl;
         std::cout << "sum: " << rast5.band< 0 >().sum() << std::endl;
         std::cout << "avg: " << rast5.band< 0 >().avg() << std::endl;
-        std::cout << "same size: " << rast5.same_size() << std::endl;
+        std::cout << "avg: " << rast5.band< 1 >().avg() << std::endl;
 
-        //rast5.append( gis::Band< double >( 20, 20, 3.0, 6.765 ) );
-
-        gis::Raster< int > rast6;
+        //auto abc = rast5.append( gis::Band< int >( 20, 20, 3.0, 6.765 ) );
     }
     catch( std::exception const& e )
     {

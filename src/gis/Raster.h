@@ -29,7 +29,6 @@
 #include <gis/Band.h>
 
 #include <tuple>
-#include <utility>
 
 namespace gis
 {
@@ -40,7 +39,7 @@ class Raster
 {
 public:
     ///
-    typedef std::tuple< Band< Ts >... > Data;
+    using Data = std::tuple< Band< Ts >... >;
 
     ///
     Raster(
@@ -143,22 +142,21 @@ public:
         return std::get< N >( m_data );
     }
 
-    ///
+    /*///
     template< typename U >
-    auto append(
+    Raster< Ts..., U > append(
         Band< U >&& band )
     {
-        //return Raster( std::tuple_cat( m_data, std::forward< U >( band ) ) );
-    }
+        return Raster( std::tuple_cat( m_data,
+            std::make_tuple( std::forward< Band< U > >( band ) ) ) );
+    }*/
 
     ///
-    constexpr bool same_size()
+    constexpr bool same_size() const
     {
         return same_size(
             std::make_index_sequence< std::tuple_size< Data >::value >{} );
     }
-
-protected:
 
 private:
     ///
@@ -182,7 +180,7 @@ private:
     ///
     template< typename U >
     constexpr bool same_size(
-        U&& a )
+        U&& a ) const
     {
         return true;
     }
@@ -192,7 +190,7 @@ private:
     constexpr bool same_size(
         U1&& a,
         U2&& b,
-        Us&&... us )
+        Us&&... us ) const
     {
         return ( a.width() == b.width() ) && ( a.height() == b.height() ) &&
             same_size( a, std::forward< Us >( us )... );
@@ -201,7 +199,7 @@ private:
     ///
     template< std::size_t... Ns >
     constexpr bool same_size(
-        std::index_sequence< Ns... > )
+        std::index_sequence< Ns... > ) const
     {
         return same_size( std::get< Ns >( m_data )... );
     }
